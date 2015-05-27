@@ -13,12 +13,33 @@ function [f,g] = logistic_regression(theta, X,y)
   f = 0;
   g = zeros(size(theta));
 
+  y_hat = [];
+
+  for index = 1:m
+      yi_hat = 0;
+      for theta_index = 1:size(theta)
+          yi_hat = yi_hat + theta(theta_index)*X(theta_index,index);
+      end
+      y_hat = [y_hat;sigmoid(yi_hat)];
+  end
 
   %
   % TODO:  Compute the objective function by looping over the dataset and summing
   %        up the objective values for each example.  Store the result in 'f'.
+
+  for index = 1:m
+      f = f + (y(index)*log(y_hat(index)) + (1-y(index))*log(1-y_hat(index))); 
+  end
+  
+  f = -1 * f;
+
   %
   % TODO:  Compute the gradient of the objective by looping over the dataset and summing
   %        up the gradients (df/dtheta) for each example. Store the result in 'g'.
   %
-%%% YOUR CODE HERE %%%
+
+  for theta_index = 1:size(theta)
+      for index = 1:m
+          g(theta_index) = g(theta_index) + X(theta_index,index)*(h(index)-y(index));
+      end
+  end
